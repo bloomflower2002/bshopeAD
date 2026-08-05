@@ -1,0 +1,349 @@
+/* ========================================
+   NAVBAR STYLES
+   ======================================== */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
+  list-style-type: none;
+  margin: 0;
+  padding: 0px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  font-family: 'Arial', sans-serif;
+  height: 85px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(122,92,255,.25), transparent 45%),
+    linear-gradient(180deg, #1B1E29 0%, #161922 50%, #14161F 100%);
+}
+
+/* ========================================
+   LOGO
+   ======================================== */
+
+.logo {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.bshope-img {
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ========================================
+   NAV LINKS
+   ======================================== */
+
+.navlinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  gap: 24px;
+  margin: 0;
+  flex: 1;
+  font-size: 18px;
+}
+
+.navlinks li {
+  list-style: none;
+}
+
+.navlinks a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navlinks a:hover {
+  color: #fa6204;
+}
+
+/* ========================================
+   NAV ACTIONS
+   ======================================== */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ========================================
+   SEARCH TOGGLE
+   ======================================== */
+
+.search-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 40px;
+  padding: 2px 4px 2px 12px;
+  height: 38px;
+  transition: width 0.3s ease;
+}
+
+.search-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.search-toggle select {
+  border: none;
+  background: transparent;
+  font-size: 0.8rem;
+  width: 50px;
+  padding: 0.4rem 0.2rem;
+  outline: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #e0e6ef;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e0e6ef'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.4rem center;
+  background-size: 10px 6px;
+}
+
+.search-toggle select option {
+  width: 100%;
+  height: auto;
+  background: #1B1E29;
+  color: #f0f4fa;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 40px;
+  padding: 0.15rem 0.15rem 0.15rem 0.6rem;
+}
+
+.search-toggle select:focus {
+  border-color: #fa6204;
+}
+
+.search-bar-inline {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0.2rem;
+  font-size: 0.9rem;
+  outline: none;
+  width: 140px;
+  transition: width 0.3s;
+  color: #f0f4fa;
+}
+
+.search-bar-inline::placeholder {
+  color: #9aa8b9;
+  font-weight: 300;
+}
+
+.search-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #e0e6ef;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* ========================================
+   SIGN IN BUTTON
+   ======================================== */
+
+.signin-btn {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #fa6204;
+  background: #fa6204;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.signin-btn:hover {
+  background: #ff7a2f;
+  border-color: #ff7a2f;
+}
+
+/* ========================================
+   LANGUAGE BUTTON
+   ======================================== */
+
+.language-btn {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.language-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ========================================
+   MOBILE ELEMENTS (Hidden by default)
+   ======================================== */
+
+.mobile-actions,
+.mobile-search-panel,
+.mobile-signin {
+  display: none;
+}
+
+/* ========================================
+   RESPONSIVE - TABLET & MOBILE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+    height: 70px;
+  }
+
+  .nav-actions {
+    display: none;
+  }
+
+  .mobile-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .menu-toggle {
+    cursor: pointer;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu-toggle:active {
+    transform: scale(0.92);
+  }
+
+  .mobile-language-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 18px;
+    border-radius: 50%;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 8px 14px;
+  }
+
+  .navlinks {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 16px;
+    right: 16px;
+    width: calc(100% - 32px);
+    flex-direction: column;
+    align-items: flex-start;
+    background: rgba(22, 25, 34, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-radius: 12px;
+    gap: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .navlinks.active {
+    display: flex;
+  }
+
+  .mobile-signin {
+    display: block !important;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .mobile-signin a {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: #fa6204;
+    border-radius: 30px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+  }
+
+  .mobile-search-panel {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 16px;
+    right: 16px;
+    width: calc(100% - 32px);
+    background: rgba(22, 25, 34, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  .mobile-search-panel.active {
+    display: block;
+  }
+
+  .mobile-search-panel .search-toggle {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mobile-search-panel .search-bar-inline {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   RESPONSIVE - SMALL MOBILE
+   ======================================== */
+
+@media (max-width: 480px) {
+  .bshope-img {
+    height: 55px;
+    width: auto;
+  }
+}
