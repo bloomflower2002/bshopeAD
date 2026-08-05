@@ -25,7 +25,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 const QUICK_LINKS: QuickLink[] = [
-  { href: '/dashboard', label: 'Home' },
+  { href: '/', label: 'Home' },
   { href: '/product', label: 'Product' },
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
