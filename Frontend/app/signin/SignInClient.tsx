@@ -95,7 +95,7 @@ export default function SignInClient() {
 
   const handleSocialLogin = (provider: string) => {
     console.log(`Sign in with ${provider}`);
-    // Implement social login logic here
+
   };
 
   return (
