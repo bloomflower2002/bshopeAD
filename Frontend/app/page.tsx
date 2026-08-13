@@ -86,6 +86,24 @@ export default function Home() {
     setCurrentSlide((prev) => (prev - 1 + FEATURED_ITEMS.length) % FEATURED_ITEMS.length);
   const goToSlide = (index: number) => setCurrentSlide(index);
 
+  const [cardSpacing, setCardSpacing] = useState<number>(260);
+
+  // adjust spacing based on viewport so translateX doesn't overflow on small screens
+  useEffect(() => {
+    const updateSpacing = () => {
+      const w = window.innerWidth;
+      if (w < 480) setCardSpacing(160);
+      else if (w < 640) setCardSpacing(200);
+      else if (w < 768) setCardSpacing(220);
+      else if (w < 1024) setCardSpacing(260);
+      else setCardSpacing(300);
+    };
+
+    updateSpacing();
+    window.addEventListener('resize', updateSpacing);
+    return () => window.removeEventListener('resize', updateSpacing);
+  }, []);
+
   const toggleFAQ = (id: number) => {
     setFaqItems((prev) =>
       prev.map((item) =>
@@ -121,9 +139,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1B1E29] via-[#161922] to-[#14161F] text-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#1B1E29] via-[#161922] to-[#14161F] text-white overflow-x-hidden">
       {/* Hero Quote */}
-      <div className="max-w-[1150px] mx-auto px-6 pt-6">
+      <div className="max-w-[1150px] mx-auto px-6 pt-2 mb-[-50px]">
         <h1 className="text-[clamp(32px,4vw,50px)] text-white text-center pt-[30px] px-5 m-0 mx-auto max-w-[1100px] font-['Black_Ops_One',sans-serif]">
           <span className="text-[#fa6204]">Bid</span> anywhere, anytime, on{' '}
           <span className="text-[#fa6204]">anything</span>
@@ -134,9 +152,9 @@ export default function Home() {
       </div>
 
       {/* Coverflow Slider Section — full screen */}
-      <div className="relative w-full min-h-screen flex flex-col justify-center mt-[-90px] mb-[-90px] px-6 md:px-5 py-16">
+      <div className="relative w-full min-h-screen flex flex-col justify-center   mt-[-200px] mb-[-10px] md:mt-[-90px] md:mb-[-90px] px-6 md:px-5 py-12">
 
-        <div className="relative h-[60vh] min-h-[420px] flex items-center justify-center overflow-flex gap-4">
+          <div className="relative h-[60vh] min-h-[420px] flex items-center justify-center overflow-hidden gap-4">
             {FEATURED_ITEMS.map((item, index) => {
               let offset = index - currentSlide;
               const half = Math.floor(FEATURED_ITEMS.length / 2);
@@ -147,7 +165,7 @@ export default function Home() {
               if (abs > 2) return null; // hide anything beyond 2 cards out
 
               const scale = abs === 0 ? 1 : abs === 1 ? 0.78 : 0.6;
-              const translateX = offset * 260;
+                const translateX = offset * 260;
               const translateY = abs === 0 ? -10 : 20;
               const opacity = abs === 0 ? 1 : abs === 1 ? 0.75 : 0.4;
               const zIndex = 10 - abs;
@@ -222,7 +240,7 @@ export default function Home() {
           </div>
 
           {/* Dots */}
-          <div className="text-center mt-4">
+          <div className="text-center mt-[-60px] md:mt-6">
             {FEATURED_ITEMS.map((_, index) => (
               <span
                 key={index}
@@ -236,7 +254,7 @@ export default function Home() {
       </div>
 
       {/* Featured Auctions Preview — full screen */}
-      <section className="w-full min-h-screen flex flex-col justify-center px-6 md:px-12 py-0">
+      <section className="w-full min-h-screen flex flex-col justify-center mt-[-150px] md:mt-0 px-6 md:px-12 py-0">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-[28px] text-white">
               Featured <span className="text-[#fa6204]">Auctions</span>
@@ -318,7 +336,7 @@ export default function Home() {
         </section>
 
         {/* Reviews Section */}
-        <section className="max-w-[1100px] mx-auto mb-[70px] px-6 text-[#f5f7fb]">
+        <section className="max-w-[1100px] mx-auto mb-[-20px] px-6 text-[#f5f7fb]">
           <h2 className="text-[28px] mb-4 text-white">What Our Users Say</h2>
 
           {/* Review Form */}
