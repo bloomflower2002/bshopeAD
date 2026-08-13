@@ -43,7 +43,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
     <footer className={`bg-[#14161F] text-[#e3f6eb] py-[44px] px-6 pb-6 ${className}`}>
       <div className="max-w-[1150px] mx-auto">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-start">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-start">
           {/* Brand Section */}
           <div className="footer-brand">
             <Link href="/dashboard">
@@ -116,7 +116,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="max-w-[1150px] mx-auto pt-6 text-center text-[#8eb79b] text-sm border-t border-white/10">
+        <div className="max-w-[1150px] mx-auto pt-6  mt-6 text-center text-[#8eb79b] text-sm border-t border-white/10">
           © {currentYear} BShope. All rights reserved.
         </div>
       </div>

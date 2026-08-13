@@ -95,7 +95,7 @@ export default function AuctionsClient() {
 
       {/* Product Grid */}
       {filteredProducts.length > 0 ? (
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <section className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           {filteredProducts.map((product) => (
             <article
               key={product.id}
