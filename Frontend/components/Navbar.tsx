@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, MouseEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -41,8 +42,9 @@ const Navbar: React.FC<NavbarProps> = ({
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
 
-  // True whenever any search UI (mobile or desktop) is up — used to hide
-  // the regular navbar chrome while the person is searching.
+  const router = useRouter();
+
+
   const isSearchActive = isSearchOpen || desktopSearchActive;
 
   useEffect(() => {
@@ -111,6 +113,14 @@ const Navbar: React.FC<NavbarProps> = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch?.(searchQuery, selectedCategory);
+    // navigate to auctions with query params so listings can read them
+    try {
+      const q = encodeURIComponent(searchQuery.trim());
+      const c = encodeURIComponent(selectedCategory);
+      router.push(`/auctions?search=${q}&cat=${c}`);
+    } catch (err) {
+      /* ignore */
+    }
     if (isSearchOpen) {
       setIsMenuOpen(false);
       setIsSearchOpen(false);
@@ -118,8 +128,11 @@ const Navbar: React.FC<NavbarProps> = ({
   };
 
   const handleSignIn = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onSignIn?.();
+
+    if (onSignIn) {
+      e.preventDefault();
+      onSignIn();
+    }
   };
 
   return (

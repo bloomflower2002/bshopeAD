@@ -1,21 +1,49 @@
+
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AUCTION_PRODUCTS } from './data';
+import { useSearchParams } from 'next/navigation';
 
 const CATEGORIES = ['All', 'Electronics', 'Appliances', 'Gaming', 'Furniture'];
 
 export default function AuctionsClient() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [sortBy, setSortBy] = useState('newest');
+  const searchParams = useSearchParams();
+  const urlQuery = searchParams?.get('search') ?? '';
+  const urlCat = searchParams?.get('cat') ?? '';
+
+  useEffect(() => {
+    if (urlCat) {
+      // Normalize category param to a readable form when possible
+      const normalized = urlCat === 'all' ? 'All' : urlCat.charAt(0).toUpperCase() + urlCat.slice(1);
+      setActiveCategory(normalized);
+    }
+  }, [urlCat]);
 
   const filteredProducts = useMemo(() => {
-    let products =
-      activeCategory === 'All'
-        ? [...AUCTION_PRODUCTS]
-        : AUCTION_PRODUCTS.filter((product) => product.category === activeCategory);
+    const query = (urlQuery ?? '').toLowerCase().trim();
+
+    let products = [...AUCTION_PRODUCTS];
+
+    // apply category filter from URL param or activeCategory
+    const effectiveCat = urlCat ? urlCat.toLowerCase() : activeCategory !== 'All' ? activeCategory.toLowerCase() : '';
+    if (effectiveCat && effectiveCat !== 'all') {
+      products = products.filter((product) => (product.category ?? '').toLowerCase().includes(effectiveCat));
+    }
+
+    // apply text search if provided
+    if (query) {
+      products = products.filter((product) => {
+        const title = product.title?.toLowerCase() ?? '';
+        const desc = product.description?.toLowerCase() ?? '';
+        const alt = product.alt?.toLowerCase() ?? '';
+        return title.includes(query) || desc.includes(query) || alt.includes(query);
+      });
+    }
 
     switch (sortBy) {
       case 'price-low':
@@ -29,7 +57,7 @@ export default function AuctionsClient() {
     }
 
     return products;
-  }, [activeCategory, sortBy]);
+  }, [activeCategory, sortBy, urlQuery, urlCat]);
 
   return (
     <>
