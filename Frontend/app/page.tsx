@@ -1,14 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-interface Slide {
-  id: number;
-  images: string[];
-  alt: string[];
-}
+import { AUCTION_PRODUCTS } from './auctions/data';
 
 interface Review {
   id: number;
@@ -23,24 +18,6 @@ interface FAQItem {
   answer: string;
   isOpen?: boolean;
 }
-
-const SLIDES: Slide[] = [
-  {
-    id: 0,
-    images: ['/airpod.jpg', '/iphone.jpg', '/mac.jpg', '/BMW.jpg'],
-    alt: ['Airpod auction', 'iPhone auction', 'Mac auction', 'BMW auction'],
-  },
-  {
-    id: 1,
-    images: ['/fridge.webp', '/makeupkit.jpg', '/ps5.jpg', '/porsche.jpg'],
-    alt: ['Shopbrand', 'Makeup kit auction', 'PS5 auction', 'Porsche auction'],
-  },
-  {
-    id: 2,
-    images: ['/BMW.jpg', '/airpod.jpg', '/iphone.jpg', '/mac.jpg'],
-    alt: ['Luxury car auction', 'Airpod auction', 'iPhone auction', 'Mac auction'],
-  },
-];
 
 const INITIAL_REVIEWS: Review[] = [
   {
@@ -84,154 +61,234 @@ const FAQ_ITEMS: FAQItem[] = [
   },
 ];
 
-export default function HomePage() {
-  const [currentSlide, setCurrentSlide] = useState<number>(0);
+const FEATURED_ITEMS = AUCTION_PRODUCTS.slice(0, 7); // odd number centers nicely
+
+export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState<number>(
+    Math.floor(FEATURED_ITEMS.length / 2)
+  );
   const [faqItems, setFaqItems] = useState<FAQItem[]>(FAQ_ITEMS);
   const [reviews, setReviews] = useState<Review[]>(INITIAL_REVIEWS);
   const [reviewText, setReviewText] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const sliderRef = useRef<HTMLDivElement>(null);
 
-  // Auto-slide functionality
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-    }, 5000);
-
+      setCurrentSlide((prev) => (prev + 1) % FEATURED_ITEMS.length);
+    }, 3500);
     return () => clearInterval(interval);
   }, []);
 
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-  };
+  const nextSlide = () =>
+    setCurrentSlide((prev) => (prev + 1) % FEATURED_ITEMS.length);
+  const prevSlide = () =>
+    setCurrentSlide((prev) => (prev - 1 + FEATURED_ITEMS.length) % FEATURED_ITEMS.length);
+  const goToSlide = (index: number) => setCurrentSlide(index);
 
   const toggleFAQ = (id: number) => {
-    setFaqItems(
-      faqItems.map((item) =>
+    setFaqItems((prev) =>
+      prev.map((item) =>
         item.id === id ? { ...item, isOpen: !item.isOpen } : item
       )
     );
   };
 
-  const handleReviewSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
+  const renderStars = (count: number) =>
+    '★'.repeat(count) + '☆'.repeat(Math.max(0, 5 - count));
 
+  const handleReviewSubmit = (e: FormEvent) => {
+    e.preventDefault();
     if (!reviewText.trim()) {
       setError('Please write a review before submitting.');
       return;
     }
-
     setIsSubmitting(true);
+    setError('');
 
+    // Simulated submit — swap for a real API call when ready.
     setTimeout(() => {
       const newReview: Review = {
-        id: reviews.length + 1,
-        name: 'Anonymous User',
+        id: Date.now(),
+        name: 'Anonymous',
         text: reviewText.trim(),
         stars: 5,
       };
-      setReviews([newReview, ...reviews]);
+      setReviews((prev) => [newReview, ...prev]);
       setReviewText('');
       setIsSubmitting(false);
-    }, 1000);
-  };
-
-  const renderStars = (count: number) => {
-    return '★'.repeat(count) + '☆'.repeat(5 - count);
+    }, 500);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#1B1E29] via-[#161922] to-[#14161F] text-white">
-      <main className="max-w-[1150px] mx-auto px-6 py-6 pb-20">
-        {/* Hero Quote */}
+      {/* Hero Quote */}
+      <div className="max-w-[1150px] mx-auto px-6 pt-6">
         <h1 className="text-[clamp(32px,4vw,50px)] text-white text-center pt-[30px] px-5 m-0 mx-auto max-w-[1100px] font-['Black_Ops_One',sans-serif]">
           <span className="text-[#fa6204]">Bid</span> anywhere, anytime, on{' '}
           <span className="text-[#fa6204]">anything</span>
         </h1>
-        <p className="text-base text-white max-w-[1000px] mx-auto mt-3 px-5 leading-relaxed">
+        <p className="text-base text-white max-w-[1000px] text-center mx-auto mt-3 px-5 leading-relaxed">
           The ultimate online auction platform where you can bid on a wide range of products from the comfort of your own home.
         </p>
-        <p className="text-base text-white max-w-[1000px] mx-auto mt-0 px-5 leading-relaxed">
-          Join our community of passionate bidders and experience the thrill of winning at BShope!
-        </p>
+      </div>
 
-        {/* Slider Section */}
-        <div className="max-w-[1100px] w-full mx-auto mt-10 relative">
-          <div className="relative overflow-hidden rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.35)] p-3 bg-[#14161F]">
-            <div
-              ref={sliderRef}
-              className="transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              <div className="flex">
-                {SLIDES.map((slide) => (
-                  <div
-                    key={slide.id}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full flex-shrink-0"
-                  >
-                    {slide.images.map((img, idx) => (
-                      <Link
-                        key={idx}
-                        href="/auctions"
-                        className="overflow-hidden rounded-xl bg-[#111] relative aspect-[4/3] block"
-                      >
-                        <Image
-                          src={img}
-                          alt={slide.alt[idx] || 'Auction item'}
-                          fill
-                          className="object-cover hover:scale-105 transition-transform duration-300"
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                        />
-                      </Link>
-                    ))}
+      {/* Coverflow Slider Section — full screen */}
+      <div className="relative w-full min-h-screen flex flex-col justify-center mt-[-90px] mb-[-90px] px-6 md:px-5 py-16">
+
+        <div className="relative h-[60vh] min-h-[420px] flex items-center justify-center overflow-flex gap-4">
+            {FEATURED_ITEMS.map((item, index) => {
+              let offset = index - currentSlide;
+              const half = Math.floor(FEATURED_ITEMS.length / 2);
+              if (offset > half) offset -= FEATURED_ITEMS.length;
+              if (offset < -half) offset += FEATURED_ITEMS.length;
+
+              const abs = Math.abs(offset);
+              if (abs > 2) return null; // hide anything beyond 2 cards out
+
+              const scale = abs === 0 ? 1 : abs === 1 ? 0.78 : 0.6;
+              const translateX = offset * 260;
+              const translateY = abs === 0 ? -10 : 20;
+              const opacity = abs === 0 ? 1 : abs === 1 ? 0.75 : 0.4;
+              const zIndex = 10 - abs;
+
+              return (
+                <Link
+                  key={item.id}
+                  href={`/auctions/${item.id}`}
+                  onClick={(e) => {
+                    if (offset !== 0) {
+                      e.preventDefault();
+                      goToSlide(index);
+                    }
+                  }}
+                  className="absolute w-[280px] sm:w-[340px] rounded-2xl overflow-hidden bg-[#14161F] border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out"
+                  style={{
+                    transform: `translateX(${translateX}px) translateY(${translateY}px) scale(${scale})`,
+                    opacity,
+                    zIndex,
+                  }}
+                >
+                  <div className="relative aspect-[5/5] w-full">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      fill
+                      className="object-cover"
+                      sizes="340px"
+                    />
+                    {abs === 0 && (
+                      <div className="absolute top-3 left-3 flex items-center gap-2 bg-black/50 backdrop-blur-sm rounded-full pl-1 pr-3 py-1">
+                        <div className="w-6 h-6 rounded-full bg-white/20" />
+                        <span className="text-[11px] text-white/90 truncate max-w-[130px]">
+                          {item.category}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </div>
+
+                  {abs === 0 && (
+                    <div className="p-3 flex items-center justify-between bg-[#14161F]">
+                      <div>
+                        <p className="text-[10px] text-white/50">Current Bid</p>
+                        <p className="text-sm font-bold text-[#fa6204]">
+                          {item.currentBid}ETB
+                        </p>
+                      </div>
+                      <span className="text-[11px] font-semibold text-white/80 hover:text-[#fa6204] transition-colors">
+                        MORE →
+                      </span>
+                    </div>
+                  )}
+                </Link>
+              );
+            })}
 
             {/* Navigation Buttons */}
             <button
               onClick={prevSlide}
-              className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/45 text-white text-[28px] w-12 h-12 rounded-full border-none cursor-pointer z-10 hover:bg-black/65 transition-colors duration-200 flex items-center justify-center"
+              className="absolute left-2 sm:left-8 top-1/2 -translate-y-1/2 bg-black/45 text-white text-2xl w-11 h-11 rounded-full border border-white/10 cursor-pointer z-20 hover:bg-black/65 transition-colors duration-200 flex items-center justify-center"
               aria-label="Previous slide"
             >
               ❮
             </button>
             <button
               onClick={nextSlide}
-              className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/45 text-white text-[28px] w-12 h-12 rounded-full border-none cursor-pointer z-10 hover:bg-black/65 transition-colors duration-200 flex items-center justify-center"
+              className="absolute right-2 sm:right-8 top-1/2 -translate-y-1/2 bg-black/45 text-white text-2xl w-11 h-11 rounded-full border border-white/10 cursor-pointer z-20 hover:bg-black/65 transition-colors duration-200 flex items-center justify-center"
               aria-label="Next slide"
             >
               ❯
             </button>
-
-            {/* Dots */}
-            <div className="text-center mt-4">
-              {SLIDES.map((_, index) => (
-                <span
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`inline-block w-3 h-3 mx-1.5 rounded-full cursor-pointer transition-colors duration-200 ${
-                    currentSlide === index
-                      ? 'bg-white'
-                      : 'bg-white/40 hover:bg-white/60'
-                  }`}
-                />
-              ))}
-            </div>
           </div>
-        </div>
 
+          {/* Dots */}
+          <div className="text-center mt-4">
+            {FEATURED_ITEMS.map((_, index) => (
+              <span
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`inline-block w-2.5 h-2.5 mx-1.5 rounded-full cursor-pointer transition-colors duration-200 ${
+                  currentSlide === index ? 'bg-[#fa6204]' : 'bg-white/30 hover:bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+      </div>
+
+      {/* Featured Auctions Preview — full screen */}
+      <section className="w-full min-h-screen flex flex-col justify-center px-6 md:px-12 py-0">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-[28px] text-white">
+              Featured <span className="text-[#fa6204]">Auctions</span>
+            </h2>
+            <Link
+              href="/auctions"
+              className="text-sm text-[#fa6204] hover:text-[#ff7a2f] transition-colors duration-200 whitespace-nowrap"
+            >
+              View All →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {AUCTION_PRODUCTS.slice(0, 12).map((product) => (
+              <Link
+                key={product.id}
+                href={`/auctions/${product.id}`}
+                className="group rounded-2xl overflow-hidden bg-white/10 border border-white/15 backdrop-blur-sm hover:border-[#fa6204] hover:shadow-[0_10px_24px_rgba(250,98,4,0.16)] transition-all duration-300"
+              >
+                <div className="relative aspect-[4/3] w-full bg-[#111]">
+                  <Image
+                    src={product.image}
+                    alt={product.alt}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                  />
+                </div>
+                <div className="p-3">
+                  <p className="text-[11px] uppercase tracking-[0.25em] text-[#fa6204] font-semibold mb-1 truncate">
+                    {product.category}
+                  </p>
+                  <h3 className="text-sm font-semibold text-white truncate mb-2">
+                    {product.title}
+                  </h3>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-white/70">Current Bid</span>
+                    <span className="text-[#fa6204] font-bold">
+                      {product.currentBid}ETB
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs mt-1">
+                    <span className="text-white/70">Time Left</span>
+                    <span className="text-white">{product.timeLeft}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+      <main className="max-w-[1150px] mx-auto px-6 pb-20">
         {/* FAQ Section */}
         <section className="max-w-[1100px] mx-auto my-9 px-6 text-[#f5f7fb]">
           <h2 className="text-[28px] mb-4 text-white">Frequently Asked Questions</h2>

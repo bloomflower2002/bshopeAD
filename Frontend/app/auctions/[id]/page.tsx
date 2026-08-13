@@ -97,6 +97,17 @@ export default async function AuctionDetailPage({ params }: Props) {
                 </div>
               </div>
 
+              <div>
+              <div className="rounded-3xl border border-white/10 bg-[#111421] p-6">
+                <p className="text-sm text-white/70">Time Left</p>
+                <p className="text-3xl font-bold text-white mt-2">{product.timeLeft}</p>
+              </div>
+              <div className="rounded-3xl border border-white/10 bg-[#111421] p-6 mt-4">
+                <p className="text-sm text-white/70">End Time</p>
+                <p className="text-3xl font-bold text-white mt-2">{product.endTime}</p>
+              </div>
+              </div>
+
               <div className="rounded-3xl border border-white/10 bg-[#111421] p-6 space-y-4">
                 <h2 className="text-xl font-bold">Terms and Conditions</h2>
                 <ul className="list-disc list-inside space-y-3 text-white/80 text-sm">

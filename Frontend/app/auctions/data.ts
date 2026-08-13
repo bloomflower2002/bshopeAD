@@ -9,6 +9,8 @@ export interface AuctionProduct {
   currentBid?: number;
   bidders?: number;
   description: string;
+  endTime?: string;
+  
 }
 
 export const AUCTION_PRODUCTS: AuctionProduct[] = [

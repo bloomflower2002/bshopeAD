@@ -97,6 +97,10 @@ export default function AuctionsClient() {
               <p className="text-white/70 text-[13px] text-center mt-1">
                 Current Bid: {product.currentBid}ETB | Bidders: {product.bidders}
               </p>
+              <p className="text-white/70 text-[13px] text-center mt-1">
+                Times Left: {product.timeLeft} | End Time: {product.endTime}
+              </p>
+              
               <Link
                 href={`/auctions/${product.id}`}
                 className="w-full inline-flex justify-center mt-4 px-4 py-2 bg-[#fa6204] text-white rounded-full text-sm font-semibold hover:bg-[#ff7a2f] transition-colors duration-200"
